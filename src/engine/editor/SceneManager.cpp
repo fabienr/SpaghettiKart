@@ -33,7 +33,7 @@ extern "C" {
 #include "render_courses.h"
 }
 
-namespace Editor {
+namespace TrackEditor {
     void SaveLevel(Track* track, const TrackInfo* info) {
         nlohmann::json data;
 
@@ -42,6 +42,7 @@ namespace Editor {
          */
         try {
             data["Props"] = track->Props.to_json();
+            data["Props"]["ResourceName"] = track->ResourceName.c_str();
         } catch (...) {
             SPDLOG_ERROR("[SceneManager] [SaveLevel] Failed serializing track Props");
         }
@@ -331,6 +332,7 @@ namespace Editor {
 
         try {
             track->Props.from_json(data["Props"]);
+            track->ResourceName = data["Props"].at("ResourceName").get<std::string>();
         } catch(const std::exception& e) {
             std::cerr << "  Error parsing track properties: " << e.what() << std::endl;
             std::cerr << "    Is your scene.json file out of date?" << std::endl;

@@ -350,7 +350,6 @@ bool IsTriangleWindingInverted() {
     return !gModifiedGfxSet.empty();
 }
 
-
 Track::Track() {
     Props.SetText(Props.ResourceName, "mod:blank_track", sizeof(Props.ResourceName));
     Props.SetText(Props.Name, "Blank Track", sizeof(Props.Name));
@@ -358,7 +357,7 @@ Track::Track() {
     Props.SetText(Props.TrackLength, "100m", sizeof(Props.TrackLength));
     // Props.Cup = FLOWER_CUP;
     // Props.CupIndex = 3;
-    ResourceName = "";
+    ResourceName = "mod:blank_track";
     Props.Minimap.Texture = minimap_mario_raceway;
     Props.Minimap.Width = ResourceGetTexWidthByName(Props.Minimap.Texture);
     Props.Minimap.Height = ResourceGetTexHeightByName(Props.Minimap.Texture);
@@ -450,7 +449,7 @@ void Track::Load() {
     } else { // Load custom track
         bIsMod = true;
 
-        Editor::LoadTrackDataFromJson(this, trackPath);
+        TrackEditor::LoadTrackDataFromJson(this, trackPath);
         
         const std::string trackSectionPath = (trackPath + "/data_track_sections");
         TrackSections* sections = (TrackSections*) LOAD_ASSET_RAW(trackSectionPath.c_str());
@@ -647,6 +646,10 @@ void Track::Draw(ScreenContext* arg0) {
     }
 
     const TrackInfo* info = gTrackRegistry.GetInfo(ResourceName);
+    if (nullptr == info) {
+        printf("[Track] [Draw] Resource name did not return a valid TrackInfo %s\n", ResourceName.c_str());
+        return;
+    }
     std::string res = info->Path + "/data_track_sections";
 
     TrackSections* sections = (TrackSections*) LOAD_ASSET_RAW(res.c_str());

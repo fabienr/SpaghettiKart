@@ -6,7 +6,7 @@
 #include <optional>
 #include <nlohmann/json.hpp>
 
-namespace Editor {
+namespace TrackEditor {
     void SaveLevel(Track* track, const TrackInfo* info);
     void LoadTrackDataFromJson(Track* track, const std::string& trackPath);
     void LoadTrackInfo(TrackInfo& info, std::shared_ptr<Ship::Archive> archive, std::string sceneFile);
