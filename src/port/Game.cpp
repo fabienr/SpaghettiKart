@@ -906,6 +906,29 @@ void push_frame() {
     // Graphics_ThreadUpdate();w
 }
 
+void CM_ThrowRuntimeError(const char* fmt, ...) {
+    char error_mesg[2048];
+
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(error_mesg, sizeof(error_mesg), fmt, args);
+    va_end(args);
+
+    const char* crash_desc = "\nSpaghettiKart has crashed! Please upload the logs to the support channel in Discord.";
+    strncat(error_mesg, crash_desc, sizeof(error_mesg) - strlen(error_mesg) - 1);
+
+    SPDLOG_ERROR(error_mesg);
+
+    SDL_ShowSimpleMessageBox(
+        SDL_MESSAGEBOX_ERROR,
+        "You dropped your plate of Spaghetti!",
+        error_mesg,
+        NULL
+    );
+
+    exit(EXIT_FAILURE);
+}
+
 #ifdef _WIN32
 int SDL_main(int argc, char** argv) {
 #else
